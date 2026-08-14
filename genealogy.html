@@ -31,7 +31,8 @@
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .header-content {
@@ -43,51 +44,52 @@
         }
 
         header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         .back-button {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.2rem;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 600;
             transition: all 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.95rem;
         }
 
         .back-button:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateX(-3px);
+            transform: translateX(-2px);
         }
 
         /* Container */
         .container {
             max-width: 1600px;
             margin: 0 auto;
-            padding: 2rem 1rem 3rem;
+            padding: 1.5rem;
         }
 
         /* Search Section */
         .search-section {
             background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.7rem 1rem;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         input[type="text"]:focus {
@@ -96,165 +98,179 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        /* Main Tree View */
+        /* Tree View */
         .tree-view {
             background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
-        /* Tree Structure */
-        .tree-container {
+        .tree-content {
+            overflow-x: auto;
+            padding: 2rem;
+            min-height: 600px;
+        }
+
+        /* Tree Layout */
+        .tree {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3rem;
+            gap: 2.5rem;
             min-width: max-content;
-            padding: 2rem;
         }
 
-        /* Generations */
-        .generation {
+        /* Generation Row */
+        .generation-row {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            width: 100%;
-            min-height: 150px;
-            position: relative;
-        }
-
-        .generation.ancestors {
-            flex-direction: column;
             align-items: center;
+            gap: 1rem;
+            width: 100%;
+            position: relative;
+            min-height: 140px;
         }
 
-        /* Person Node */
-        .person-node {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1.2rem;
-            border-radius: 12px;
-            min-width: 220px;
-            text-align: center;
+        .generation-row.parents {
+            justify-content: center;
+        }
+
+        .generation-row.children,
+        .generation-row.grandchildren {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Generation Label */
+        .gen-label {
+            position: absolute;
+            left: 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+
+        /* Person Card */
+        .person-card {
+            padding: 1rem;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
+            text-align: center;
+            min-width: 180px;
             border: 2px solid transparent;
+            position: relative;
+            z-index: 1;
         }
 
-        .person-node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .person-node.current {
+        .person-card.current {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
             min-width: 280px;
             padding: 1.5rem;
             border: 3px solid white;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: scale(1.05);
         }
 
-        .person-node.ancestor {
+        .person-card.ancestor {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            opacity: 0.9;
-            min-width: 180px;
-            padding: 0.9rem;
-            font-size: 0.9rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .person-node.descendant {
+        .person-card.child,
+        .person-card.grandchild {
             background: linear-gradient(135deg, #10b981, #059669);
-            opacity: 0.9;
-            min-width: 180px;
-            padding: 0.9rem;
-            font-size: 0.9rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .person-card.current:hover {
+            transform: scale(1.05) translateY(-3px);
         }
 
         .person-name {
             font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
             word-break: break-word;
         }
 
-        .person-node.current .person-name {
-            font-size: 1.2rem;
+        .person-card.current .person-name {
+            font-size: 1.1rem;
         }
 
         .person-dates {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             opacity: 0.95;
+            margin-bottom: 0.3rem;
         }
 
         .person-place {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             opacity: 0.85;
-            margin-top: 0.3rem;
         }
 
-        /* Connections */
-        .generation::before {
-            content: '';
+        /* Connection Lines */
+        .connection-line {
             position: absolute;
-            top: -1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 1.5rem;
             background: var(--primary);
             opacity: 0.3;
         }
 
-        .generation.ancestors::before {
-            top: auto;
-            bottom: -1.5rem;
+        .connection-line.vertical {
+            width: 2px;
+            height: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -2.5rem;
         }
 
-        /* Labels */
-        .generation-label {
-            position: absolute;
-            left: -120px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            white-space: nowrap;
+        /* Bottom Section */
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
 
-        /* Sidebar */
-        .sidebar {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid var(--border);
+        .section-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
-        .sidebar h3 {
+        .section-card h3 {
             color: var(--primary);
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .relations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.8rem;
         }
 
         .relation-card {
             background: var(--light);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
+            padding: 0.8rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 0.85rem;
         }
 
         .relation-card:hover {
@@ -263,45 +279,32 @@
         }
 
         .relation-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             margin-bottom: 0.3rem;
+            font-weight: 600;
         }
 
         .relation-name {
             font-weight: 600;
-            font-size: 0.9rem;
             color: var(--text);
             word-break: break-word;
         }
 
-        /* Info Section */
-        .info-section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: var(--light);
-            border-radius: 8px;
-        }
-
-        .info-section h4 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
         .info-row {
             display: grid;
-            grid-template-columns: 150px 1fr;
+            grid-template-columns: 110px 1fr;
             gap: 1rem;
             margin-bottom: 0.8rem;
             padding-bottom: 0.8rem;
             border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
         }
 
         .info-row:last-child {
             border-bottom: none;
-            margin-bottom: 0;
         }
 
         .info-label {
@@ -314,41 +317,55 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
+        @media (max-width: 1024px) {
+            .bottom-section {
+                grid-template-columns: 1fr;
             }
 
-            .generation-label {
+            .gen-label {
                 display: none;
             }
 
-            .person-node {
-                min-width: 160px;
+            .person-card {
+                min-width: 140px;
                 padding: 0.8rem;
             }
 
-            .person-node.current {
+            .person-card.current {
                 min-width: 200px;
+                padding: 1.2rem;
             }
 
-            .info-row {
-                grid-template-columns: 1fr;
+            .generation-row {
+                min-height: 120px;
+                gap: 0.5rem;
             }
         }
 
-        /* Search highlighting */
-        .search-results {
-            margin-top: 2rem;
+        @media (max-width: 640px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            .person-name {
+                font-size: 0.85rem;
+            }
+
+            .person-card {
+                min-width: 120px;
+                padding: 0.6rem;
+            }
+
+            .tree-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Empty State */
+        .no-data {
+            text-align: center;
+            color: #64748b;
             padding: 1rem;
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            border-radius: 8px;
-        }
-
-        .search-results p {
-            color: #92400e;
         }
     </style>
 </head>
@@ -356,7 +373,7 @@
     <header>
         <div class="header-content">
             <h1>🌳 Árbol Genealógico Sorondo</h1>
-            <a href="index.html" class="back-button">← Volver al inicio</a>
+            <a href="index.html" class="back-button">← Volver</a>
         </div>
     </header>
 
@@ -366,23 +383,31 @@
             <input
                 type="text"
                 id="searchInput"
-                placeholder="Busca un nombre, lugar o año... (ej: 'Álvaro', 'Montevideo', '1962')"
+                placeholder="Busca un nombre (ej: Álvaro, Julio, María...)..."
             >
         </div>
 
-        <!-- Tree View -->
+        <!-- Tree -->
         <div class="tree-view">
-            <div class="tree-container" id="treeContainer"></div>
+            <div class="tree-content">
+                <div class="tree" id="treeContainer"></div>
+            </div>
         </div>
 
-        <!-- Relations -->
-        <div class="sidebar">
-            <h3>👥 Relaciones</h3>
-            <div class="relations-grid" id="relationsContainer"></div>
-        </div>
+        <!-- Bottom Section -->
+        <div class="bottom-section">
+            <!-- Relations -->
+            <div class="section-card">
+                <h3>👥 Relaciones Directas</h3>
+                <div class="relations-grid" id="relationsContainer"></div>
+            </div>
 
-        <!-- Info -->
-        <div class="info-section" id="infoSection"></div>
+            <!-- Info -->
+            <div class="section-card">
+                <h3>ℹ️ Información</h3>
+                <div id="infoContainer"></div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -396,7 +421,8 @@
                 genealogyData = data;
                 displayPerson("I1");
                 setupSearch();
-            });
+            })
+            .catch(err => console.error('Error cargando datos:', err));
 
         function displayPerson(personId) {
             const person = genealogyData.people.find(p => p.id === personId);
@@ -404,108 +430,173 @@
 
             currentPersonId = personId;
 
-            // Tree container
-            const treeContainer = document.getElementById('treeContainer');
-            treeContainer.innerHTML = '';
+            // Display tree
+            displayTree(person);
 
-            // Ancestors
-            const ancestors = getAncestors(person);
-            if (ancestors.length > 0) {
-                const ancestorGen = document.createElement('div');
-                ancestorGen.className = 'generation ancestors';
-                ancestorGen.innerHTML = `<div class="generation-label">Ancestros</div>`;
-                ancestors.forEach(anc => {
-                    ancestorGen.appendChild(createPersonNode(anc, 'ancestor'));
-                });
-                treeContainer.appendChild(ancestorGen);
-            }
-
-            // Current person
-            const currentGen = document.createElement('div');
-            currentGen.className = 'generation';
-            currentGen.appendChild(createPersonNode(person, 'current'));
-            treeContainer.appendChild(currentGen);
-
-            // Descendants
-            const descendants = getDescendants(person);
-            if (descendants.length > 0) {
-                const descendantGen = document.createElement('div');
-                descendantGen.className = 'generation';
-                descendantGen.innerHTML = `<div class="generation-label">Descendientes</div>`;
-                descendants.forEach(desc => {
-                    descendantGen.appendChild(createPersonNode(desc, 'descendant'));
-                });
-                treeContainer.appendChild(descendantGen);
-            }
-
-            // Relations
+            // Display relations
             displayRelations(person);
 
-            // Info
+            // Display info
             displayInfo(person);
         }
 
-        function createPersonNode(person, type = '') {
-            const node = document.createElement('div');
-            node.className = `person-node ${type}`;
-            node.onclick = () => displayPerson(person.id);
+        function displayTree(person) {
+            const container = document.getElementById('treeContainer');
+            container.innerHTML = '';
+
+            // Get generations
+            const greatGrandparents = getGreatGrandparents(person);
+            const grandparents = getGrandparents(person);
+            const parents = getParents(person);
+            const children = getChildren(person);
+            const grandchildren = getGrandchildren(person);
+
+            // Render generations (from top to bottom)
+            if (greatGrandparents.length > 0) {
+                container.appendChild(createGenerationRow(greatGrandparents, 'ancestor', 'Bisabuelos'));
+            }
+
+            if (grandparents.length > 0) {
+                container.appendChild(createGenerationRow(grandparents, 'ancestor', 'Abuelos'));
+            }
+
+            if (parents.length > 0) {
+                container.appendChild(createGenerationRow(parents, 'ancestor', 'Padres'));
+            }
+
+            // Current person
+            const currentRow = document.createElement('div');
+            currentRow.className = 'generation-row';
+            currentRow.appendChild(createPersonCard(person, 'current'));
+            container.appendChild(currentRow);
+
+            if (children.length > 0) {
+                container.appendChild(createGenerationRow(children, 'child', 'Hijos'));
+            }
+
+            if (grandchildren.length > 0) {
+                container.appendChild(createGenerationRow(grandchildren, 'grandchild', 'Nietos'));
+            }
+        }
+
+        function createGenerationRow(people, type, label) {
+            const row = document.createElement('div');
+            row.className = `generation-row ${type === 'ancestor' ? 'parents' : 'children'}`;
+
+            if (label) {
+                const labelEl = document.createElement('div');
+                labelEl.className = 'gen-label';
+                labelEl.textContent = label;
+                row.appendChild(labelEl);
+            }
+
+            people.forEach(person => {
+                row.appendChild(createPersonCard(person, type));
+            });
+
+            return row;
+        }
+
+        function createPersonCard(person, type) {
+            const card = document.createElement('div');
+            card.className = `person-card ${type}`;
+            card.onclick = () => displayPerson(person.id);
 
             const birth = person.birth || {};
             const death = person.death || {};
 
-            node.innerHTML = `
+            const birthYear = birth.date ? birth.date.split(' ').pop() : '?';
+            const deathYear = death.date ? death.date.split(' ').pop() : '';
+            const dates = deathYear ? `${birthYear} - ${deathYear}` : birthYear;
+
+            card.innerHTML = `
                 <div class="person-name">${person.name}</div>
-                <div class="person-dates">
-                    ${birth.date ? formatDate(birth.date) : '?'} ${death.date ? `- ${formatDate(death.date)}` : ''}
-                </div>
+                <div class="person-dates">${dates}</div>
                 ${birth.place ? `<div class="person-place">${birth.place}</div>` : ''}
             `;
 
-            return node;
+            return card;
         }
 
-        function getAncestors(person) {
-            const ancestors = [];
-
+        function getGreatGrandparents(person) {
+            const ggp = [];
             if (person.parents) {
                 person.parents.forEach(parentId => {
                     const parent = genealogyData.people.find(p => p.id === parentId);
-                    if (parent) {
-                        ancestors.push(parent);
-                        // Get grandparents
-                        if (parent.parents) {
-                            parent.parents.forEach(gpId => {
-                                const gp = genealogyData.people.find(p => p.id === gpId);
-                                if (gp) ancestors.push(gp);
-                            });
-                        }
+                    if (parent && parent.parents) {
+                        parent.parents.forEach(gpId => {
+                            const gp = genealogyData.people.find(p => p.id === gpId);
+                            if (gp && gp.parents) {
+                                gp.parents.forEach(ggpId => {
+                                    const ggperson = genealogyData.people.find(p => p.id === ggpId);
+                                    if (ggperson && !ggp.find(p => p.id === ggperson.id)) {
+                                        ggp.push(ggperson);
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
-
-            return ancestors.slice(0, 10); // Limit display
+            return ggp;
         }
 
-        function getDescendants(person) {
-            const descendants = [];
+        function getGrandparents(person) {
+            const gp = [];
+            if (person.parents) {
+                person.parents.forEach(parentId => {
+                    const parent = genealogyData.people.find(p => p.id === parentId);
+                    if (parent && parent.parents) {
+                        parent.parents.forEach(gpId => {
+                            const grandparent = genealogyData.people.find(p => p.id === gpId);
+                            if (grandparent && !gp.find(p => p.id === grandparent.id)) {
+                                gp.push(grandparent);
+                            }
+                        });
+                    }
+                });
+            }
+            return gp;
+        }
 
+        function getParents(person) {
+            const parents = [];
+            if (person.parents) {
+                person.parents.forEach(parentId => {
+                    const parent = genealogyData.people.find(p => p.id === parentId);
+                    if (parent) parents.push(parent);
+                });
+            }
+            return parents;
+        }
+
+        function getChildren(person) {
+            const children = [];
             if (person.children) {
                 person.children.forEach(childId => {
                     const child = genealogyData.people.find(p => p.id === childId);
-                    if (child) {
-                        descendants.push(child);
-                        // Get grandchildren
-                        if (child.children) {
-                            child.children.forEach(ggId => {
-                                const gg = genealogyData.people.find(p => p.id === ggId);
-                                if (gg) descendants.push(gg);
-                            });
-                        }
+                    if (child) children.push(child);
+                });
+            }
+            return children;
+        }
+
+        function getGrandchildren(person) {
+            const grandchildren = [];
+            if (person.children) {
+                person.children.forEach(childId => {
+                    const child = genealogyData.people.find(p => p.id === childId);
+                    if (child && child.children) {
+                        child.children.forEach(grandchildId => {
+                            const grandchild = genealogyData.people.find(p => p.id === grandchildId);
+                            if (grandchild && !grandchildren.find(p => p.id === grandchild.id)) {
+                                grandchildren.push(grandchild);
+                            }
+                        });
                     }
                 });
             }
-
-            return descendants.slice(0, 10); // Limit display
+            return grandchildren;
         }
 
         function displayRelations(person) {
@@ -530,6 +621,16 @@
                 });
             }
 
+            // Siblings (share same parents)
+            const siblings = genealogyData.people.filter(p => {
+                if (p.id === person.id) return false;
+                if (!person.parents || !p.parents) return false;
+                return person.parents.some(pId => p.parents.includes(pId));
+            });
+            siblings.forEach(sibling => {
+                container.appendChild(createRelationCard(sibling, '👤 Hermano/a'));
+            });
+
             // Children
             if (person.children) {
                 person.children.forEach(childId => {
@@ -547,24 +648,17 @@
             card.onclick = () => displayPerson(person.id);
             card.innerHTML = `
                 <div class="relation-label">${label}</div>
-                <div class="relation-name">${person.name}</div>
+                <div class="relation-name">${person.name.split(' ')[0]}</div>
             `;
             return card;
         }
 
         function displayInfo(person) {
-            const section = document.getElementById('infoSection');
+            const container = document.getElementById('infoContainer');
             const birth = person.birth || {};
             const death = person.death || {};
 
-            let html = `<h4>Información de ${person.name.split(' ')[0]}</h4>`;
-
-            html += `
-                <div class="info-row">
-                    <span class="info-label">Sexo:</span>
-                    <span class="info-value">${person.sex === 'M' ? '👨 Hombre' : '👩 Mujer'}</span>
-                </div>
-            `;
+            let html = '';
 
             if (birth.date) {
                 html += `
@@ -584,26 +678,29 @@
                 `;
             }
 
-            if (death) {
-                if (death.date) {
-                    html += `
-                        <div class="info-row">
-                            <span class="info-label">Fallecimiento:</span>
-                            <span class="info-value">${formatDate(death.date)}</span>
-                        </div>
-                    `;
-                }
-                if (death.place) {
-                    html += `
-                        <div class="info-row">
-                            <span class="info-label">Lugar:</span>
-                            <span class="info-value">${death.place}</span>
-                        </div>
-                    `;
-                }
+            if (death && death.date) {
+                html += `
+                    <div class="info-row">
+                        <span class="info-label">Fallecimiento:</span>
+                        <span class="info-value">${formatDate(death.date)}</span>
+                    </div>
+                `;
             }
 
-            section.innerHTML = html;
+            if (death && death.place) {
+                html += `
+                    <div class="info-row">
+                        <span class="info-label">Lugar:</span>
+                        <span class="info-value">${death.place}</span>
+                    </div>
+                `;
+            }
+
+            if (!html) {
+                html = '<div class="no-data">No hay información adicional</div>';
+            }
+
+            container.innerHTML = html;
         }
 
         function formatDate(dateStr) {
@@ -624,12 +721,11 @@
                 const query = e.target.value.toLowerCase();
                 if (query.length > 1) {
                     const results = genealogyData.people.filter(p =>
-                        p.name.toLowerCase().includes(query) ||
-                        (p.birth?.place?.toLowerCase().includes(query)) ||
-                        (p.birth?.date?.includes(query))
+                        p.name.toLowerCase().includes(query)
                     );
                     if (results.length > 0) {
                         displayPerson(results[0].id);
+                        input.value = '';
                     }
                 }
             });
