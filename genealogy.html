@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árbol Genealógico - Sorondo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--light);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            opacity: 0.95;
+            font-size: 1.05rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem 3rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Main Content */
+        .genealogy-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            height: fit-content;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 1rem;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .person-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .person-item {
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .person-item:hover {
+            background: #e2e8f0;
+            border-left-color: var(--primary);
+        }
+
+        .person-item.active {
+            background: var(--primary);
+            color: white;
+            border-left-color: var(--secondary);
+        }
+
+        .person-item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .person-item-dates {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Tree Section */
+        .tree-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .person-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .person-gender {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .person-dates {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 0.5rem;
+        }
+
+        .person-place {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .person-details {
+            background: white;
+            color: var(--text);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .detail-value {
+            color: var(--text);
+        }
+
+        /* Relations */
+        .relations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .relation-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .relation-card:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .relation-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .relation-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* Tree Visualization */
+        .family-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .generation {
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .generation-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .generation-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .member-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .member-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.1);
+        }
+
+        .member-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .member-dates {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .genealogy-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .person-name {
+                font-size: 1.3rem;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+            }
+
+            .generation-members {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            input[type="text"] {
+                min-width: 100%;
+            }
+        }
+
+        /* Scrollbar */
+        .person-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .person-list::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .person-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .person-list::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌳 Árbol Genealógico Sorondo</h1>
+        <p>Explora la historia de la familia Sorondo desde 1739 hasta hoy</p>
+    </header>
+
+    <div class="container">
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Busca un nombre, lugar o año..."
+                >
+                <div class="search-filters">
+                    <button id="showAncestorsBtn" class="active">Ancestros</button>
+                    <button id="showDescendantsBtn">Descendientes</button>
+                    <button id="clearBtn">Limpiar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="genealogy-container">
+            <!-- Sidebar with quick access -->
+            <div class="sidebar">
+                <h3>📋 Personas</h3>
+                <div class="person-list" id="personList"></div>
+            </div>
+
+            <!-- Tree Section -->
+            <div class="tree-section">
+                <div id="treeContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GEDCOM Data embedded
+        const genealogyData = {
+            people: [
+                { id: "I1", name: "Álvaro Daniel Sorondo González", sex: "M", birth: { date: "4 JUL 1962", place: "Montevideo (Uruguay)" }, parents: ["I2", "I7"], children: ["I4", "I5", "I6"], spouse: "I3" },
+                { id: "I2", name: "Julio Ruben Sorondo Velazco", sex: "M", birth: { date: "20 JUL 1931", place: "Trinidad (Flores, Uruguay)" }, parents: ["I9", "I10"], children: ["I1", "I8"], spouse: "I7" },
+                { id: "I3", name: "Mariana Beatriz Lapido Bove", sex: "F", birth: { date: "18 FEB 1964", place: "Montevideo (Uruguay)" }, children: ["I4", "I5", "I6"], spouse: "I1" },
+                { id: "I4", name: "Juan Ignacio Sorondo Lapido", sex: "M", birth: { date: "16 JUL 1993", place: "Montevideo (Uruguay)" }, parents: ["I1", "I3"] },
+                { id: "I5", name: "Santiago Sorondo Lapido", sex: "M", birth: { date: "16 MAR 1995", place: "Montevideo (Uruguay)" }, parents: ["I1", "I3"] },
+                { id: "I6", name: "Martín Sorondo Lapido", sex: "M", birth: { date: "17 MAY 1997", place: "Montevideo (Uruguay)" }, parents: ["I1", "I3"] },
+                { id: "I7", name: "Graciela Hebe González Carbone", sex: "F", birth: { date: "2 MAY 1926", place: "Montevideo (Uruguay)", death: { date: "5 JUN 2012", place: "Santa Lucía, Canelones (Uruguay)" } }, parents: ["I33", "I34"], children: ["I1", "I8"], spouse: "I2" },
+                { id: "I8", name: "Pablo Marcelo Sorondo González", sex: "M", birth: { date: "22 DEC 1967", place: "Montevideo (Uruguay)" }, parents: ["I2", "I7"] },
+                { id: "I9", name: "Ángel Manuel Sorondo Piñeiro", sex: "M", birth: { date: "31 DEC 1901", place: "Trinidad (Flores, Uruguay)" }, death: { date: "30 NOV 1986", place: "Montevideo (Uruguay)" }, children: ["I2"], spouse: "I10" },
+                { id: "I10", name: "María Isolina Velazco Fernández", sex: "F", birth: { date: "3 APR 1903", place: "Trinidad (Flores, Uruguay)" }, death: { date: "4 MAY 1967", place: "Montevideo (Uruguay)" }, children: ["I2"], spouse: "I9" },
+                { id: "I16", name: "Ángel Sorondo Llanes", sex: "M", birth: { date: "2 AUG 1870", place: "Trinidad (Flores, Uruguay)" }, children: ["I9"] },
+                { id: "I18", name: "Ángel Sorondo Álvarez", sex: "M", birth: { date: "1841" }, death: { date: "1919", place: "Trinidad (Flores, Uruguay)" }, children: ["I16"] },
+                { id: "I23", name: "Álvaro Vicente Régulo Lapido Díaz", sex: "M", birth: { date: "30 MAR 1929", place: "Montevideo (Uruguay)" }, death: { date: "13 AUG 1983", place: "Montevideo (Uruguay)" }, children: ["I27", "I28", "I29", "I3", "I30", "I31"], spouse: "I24" },
+                { id: "I24", name: "Enriqueta María Bove Santayana", sex: "F", birth: { date: "15 JUL 1935", place: "Montevideo (Uruguay)" }, children: ["I27", "I28", "I29", "I3", "I30", "I31"], spouse: "I23" },
+                { id: "I25", name: "Héctor Esteban Bove Macció", sex: "M", birth: { date: "2 DEC 1903", place: "San José de Mayo (San José, Uruguay)" }, death: { date: "2 AUG 1984", place: "Montevideo (Uruguay)" }, children: ["I24"] },
+                { id: "I33", name: "Óscar Emilio González Conzi", sex: "M", children: ["I7"] },
+                { id: "I34", name: "María Carmen Carbone Lansot", sex: "F", children: ["I7"] },
+            ],
+            relationships: {}
+        };
+
+        let currentPerson = genealogyData.people[0];
+        let viewMode = 'ancestors';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPersonList();
+            displayPerson(currentPerson);
+
+            // Event listeners
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('showAncestorsBtn').addEventListener('click', () => switchMode('ancestors'));
+            document.getElementById('showDescendantsBtn').addEventListener('click', () => switchMode('descendants'));
+            document.getElementById('clearBtn').addEventListener('click', clearSearch);
+        });
+
+        function renderPersonList() {
+            const list = document.getElementById('personList');
+            list.innerHTML = genealogyData.people
+                .slice(0, 30)
+                .map(person => `
+                    <div class="person-item ${person.id === currentPerson.id ? 'active' : ''}" onclick="selectPerson('${person.id}')">
+                        <div class="person-item-name">${person.name}</div>
+                        <div class="person-item-dates">
+                            ${person.birth?.date ? person.birth.date.split(' ').slice(-1)[0] : '?'} - ${person.death?.date ? person.death.date.split(' ').slice(-1)[0] : 'vivo'}
+                        </div>
+                    </div>
+                `)
+                .join('');
+        }
+
+        function selectPerson(personId) {
+            const person = genealogyData.people.find(p => p.id === personId);
+            if (person) {
+                currentPerson = person;
+                renderPersonList();
+                displayPerson(person);
+            }
+        }
+
+        function displayPerson(person) {
+            const content = document.getElementById('treeContent');
+
+            const birth = person.birth || {};
+            const death = person.death || {};
+            const genderLabel = person.sex === 'M' ? '👨 Hombre' : '👩 Mujer';
+
+            let html = `
+                <div class="person-card">
+                    <div class="person-header">
+                        <div>
+                            <div class="person-name">${person.name}</div>
+                            <span class="person-gender">${genderLabel}</span>
+                        </div>
+                    </div>
+                    <div class="person-dates">
+                        ${birth.date ? `📅 ${formatDate(birth.date)}` : '?'}
+                        ${death.date ? `- ${formatDate(death.date)}` : ' - vivo'}
+                    </div>
+                    ${birth.place ? `<div class="person-place">📍 ${birth.place}</div>` : ''}
+                </div>
+
+                <div class="relations">
+            `;
+
+            // Parents
+            if (person.parents?.length > 0) {
+                person.parents.forEach(parentId => {
+                    const parent = genealogyData.people.find(p => p.id === parentId);
+                    if (parent) {
+                        html += `
+                            <div class="relation-card" onclick="selectPerson('${parentId}')">
+                                <div class="relation-label">👨‍👩 Padre/Madre</div>
+                                <div class="relation-name">${parent.name}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Spouse
+            if (person.spouse) {
+                const spouse = genealogyData.people.find(p => p.id === person.spouse);
+                if (spouse) {
+                    html += `
+                        <div class="relation-card" onclick="selectPerson('${person.spouse}')">
+                            <div class="relation-label">💑 Pareja</div>
+                            <div class="relation-name">${spouse.name}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Children
+            if (person.children?.length > 0) {
+                html += `<div style="grid-column: 1 / -1;"><div class="relation-label">👶 Hijos (${person.children.length})</div>`;
+                person.children.forEach(childId => {
+                    const child = genealogyData.people.find(p => p.id === childId);
+                    if (child) {
+                        html += `
+                            <div class="relation-card" onclick="selectPerson('${childId}')">
+                                <div class="relation-name">${child.name}</div>
+                            </div>
+                        `;
+                    }
+                });
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+
+            // Family tree view
+            if (viewMode === 'ancestors') {
+                html += renderAncestors(person);
+            } else {
+                html += renderDescendants(person);
+            }
+
+            content.innerHTML = html;
+        }
+
+        function renderAncestors(person) {
+            let html = '<div class="family-tree"><div class="generation">';
+            html += '<div class="generation-title">Generación Actual</div>';
+            html += '<div class="generation-members">';
+            html += `<div class="member-card">${person.name}</div>`;
+            html += '</div></div>';
+
+            if (person.parents?.length > 0) {
+                html += '<div class="generation">';
+                html += '<div class="generation-title">Padres</div>';
+                html += '<div class="generation-members">';
+                person.parents.forEach(parentId => {
+                    const parent = genealogyData.people.find(p => p.id === parentId);
+                    if (parent) {
+                        html += `
+                            <div class="member-card" onclick="selectPerson('${parentId}')">
+                                <div class="member-name">${parent.name}</div>
+                                <div class="member-dates">${parent.birth?.date?.split(' ').slice(-1)[0] || '?'}</div>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div></div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function renderDescendants(person) {
+            if (!person.children?.length) return '<div class="empty-state"><div class="empty-state-icon">👶</div>Sin descendientes registrados</div>';
+
+            let html = '<div class="family-tree"><div class="generation">';
+            html += `<div class="generation-title">Hijos de ${person.name.split(' ')[0]}</div>`;
+            html += '<div class="generation-members">';
+            person.children.forEach(childId => {
+                const child = genealogyData.people.find(p => p.id === childId);
+                if (child) {
+                    html += `
+                        <div class="member-card" onclick="selectPerson('${childId}')">
+                            <div class="member-name">${child.name}</div>
+                            <div class="member-dates">${child.birth?.date?.split(' ').slice(-1)[0] || '?'}</div>
+                        </div>
+                    `;
+                }
+            });
+            html += '</div></div></div>';
+            return html;
+        }
+
+        function formatDate(dateStr) {
+            const parts = dateStr.split(' ');
+            const months = { JAN: 'ene', FEB: 'feb', MAR: 'mar', APR: 'abr', MAY: 'may', JUN: 'jun', JUL: 'jul', AUG: 'ago', SEP: 'sep', OCT: 'oct', NOV: 'nov', DEC: 'dic' };
+            if (parts.length === 3) {
+                return `${parts[0]} ${months[parts[1]] || parts[1]} ${parts[2]}`;
+            }
+            return dateStr;
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase();
+            if (query) {
+                const results = genealogyData.people.filter(p =>
+                    p.name.toLowerCase().includes(query) ||
+                    (p.birth?.place?.toLowerCase().includes(query)) ||
+                    (p.birth?.date?.includes(query))
+                );
+                if (results.length > 0) {
+                    selectPerson(results[0].id);
+                }
+            }
+        }
+
+        function switchMode(mode) {
+            viewMode = mode;
+            document.getElementById('showAncestorsBtn').classList.toggle('active', mode === 'ancestors');
+            document.getElementById('showDescendantsBtn').classList.toggle('active', mode === 'descendants');
+            displayPerson(currentPerson);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            selectPerson('I1');
+        }
+    </script>
+</body>
+</html>
