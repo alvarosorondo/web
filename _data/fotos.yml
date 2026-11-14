@@ -1,0 +1,6 @@
+# LEYENDAS DE FOTOS (opcional)
+# Si querés que una foto muestre un texto al verla en grande,
+# agregá una línea con el nombre exacto del archivo, dos puntos y el texto entre comillas.
+# Ejemplo (sacale el "#" del principio):
+#
+# IMG_1234.jpg: "Vista de Jerusalén desde el Monte de los Olivos"

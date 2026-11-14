@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title and page.title != site.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+  <meta property="og:description" content="{{ site.description }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --piedra: #f6f0e6;      /* piedra de Jerusalén */
+      --arena: #e8dcc6;
+      --ocre: #b5803a;
+      --olivo: #5b6b3a;
+      --tinta: #2b2620;
+      --gris: #6e655a;
+      --blanco: #fffdf9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--piedra);
+      color: var(--tinta);
+      line-height: 1.65;
+      font-size: 18px;
+    }
+    h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; line-height: 1.2; }
+    a { color: var(--olivo); }
+    img { max-width: 100%; height: auto; }
+
+    /* Navegación */
+    header.barra {
+      background: var(--blanco);
+      border-bottom: 1px solid var(--arena);
+      position: sticky; top: 0; z-index: 10;
+    }
+    header.barra .contenido {
+      max-width: 1100px; margin: 0 auto; padding: .8rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .marca {
+      font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.35rem; font-weight: 700;
+      color: var(--tinta); text-decoration: none; display: flex; align-items: center; gap: .5rem;
+    }
+    .marca .cruz { color: var(--ocre); font-size: 1.4rem; }
+    nav.menu { display: flex; gap: .25rem; flex-wrap: wrap; }
+    nav.menu a {
+      text-decoration: none; color: var(--gris); padding: .4rem .85rem; border-radius: 999px;
+      font-weight: 600; font-size: .95rem;
+    }
+    nav.menu a:hover { background: var(--piedra); color: var(--tinta); }
+    nav.menu a.activo { background: var(--olivo); color: #fff; }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    .titulo-seccion { text-align: center; margin-bottom: 2.5rem; }
+    .titulo-seccion h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); }
+    .titulo-seccion p { color: var(--gris); }
+    .vacio {
+      text-align: center; color: var(--gris); background: var(--blanco);
+      border: 1px dashed var(--arena); border-radius: 12px; padding: 2.5rem 1rem;
+    }
+
+
+    /* Portada */
+    .portada {
+      text-align: center; padding: 4rem 1rem 3rem;
+      background: radial-gradient(ellipse at top, #fff8ec 0%, var(--piedra) 70%);
+      border-radius: 20px; margin-bottom: 3rem; border: 1px solid var(--arena);
+    }
+    .portada .cruz-grande { font-size: 3rem; color: var(--ocre); line-height: 1; }
+    .portada h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); margin: .75rem 0 .5rem; }
+    .portada .sub { color: var(--gris); font-size: 1.15rem; max-width: 640px; margin: 0 auto; }
+    .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .tarjeta {
+      background: var(--blanco); border: 1px solid var(--arena); border-radius: 16px;
+      padding: 1.75rem; text-decoration: none; color: var(--tinta); transition: transform .15s, box-shadow .15s;
+    }
+    .tarjeta:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(60,40,10,.08); }
+    .tarjeta .icono { font-size: 2rem; }
+    .tarjeta h2 { font-size: 1.8rem; margin: .4rem 0 .25rem; }
+    .tarjeta p { color: var(--gris); font-size: .98rem; }
+    .tarjeta .cuenta { display: inline-block; margin-top: .75rem; color: var(--ocre); font-weight: 600; font-size: .9rem; }
+    .ultimos { margin-top: 3rem; }
+    .ultimos h2 { font-size: 2rem; margin-bottom: 1rem; }
+
+    /* Diario */
+    .posteo {
+      background: var(--blanco); border: 1px solid var(--arena); border-radius: 16px;
+      padding: 2rem clamp(1.25rem, 4vw, 2.75rem); margin: 0 auto 2rem; max-width: 760px;
+    }
+    .posteo .fecha { color: var(--ocre); font-weight: 600; font-size: .9rem; text-transform: uppercase; letter-spacing: .05em; }
+    .posteo .lugar { color: var(--gris); font-size: .95rem; }
+    .posteo h2, .posteo h1 { font-size: 2rem; margin: .25rem 0 1rem; }
+    .posteo h2 a { color: var(--tinta); text-decoration: none; }
+    .posteo .texto p { margin-bottom: 1rem; }
+    .posteo .texto img { border-radius: 10px; margin: .5rem 0; display: block; }
+    .posteo .texto blockquote { border-left: 3px solid var(--ocre); padding-left: 1rem; color: var(--gris); font-style: italic; margin: 1rem 0; }
+    .posteo .texto ul, .posteo .texto ol { margin: 0 0 1rem 1.5rem; }
+    .volver { display: block; max-width: 760px; margin: 0 auto 1rem; }
+
+    /* Fotos */
+    .galeria { columns: 3 260px; column-gap: 1rem; }
+    .galeria a { display: block; margin-bottom: 1rem; break-inside: avoid; border-radius: 10px; overflow: hidden; background: var(--arena); }
+    .galeria img { display: block; width: 100%; transition: transform .25s; }
+    .galeria a:hover img { transform: scale(1.03); }
+    .visor {
+      position: fixed; inset: 0; background: rgba(20,16,10,.94); display: none;
+      align-items: center; justify-content: center; z-index: 100;
+    }
+    .visor.abierto { display: flex; }
+    .visor img { max-width: 92vw; max-height: 86vh; border-radius: 6px; }
+    .visor button {
+      position: absolute; background: rgba(255,255,255,.12); color: #fff; border: 0;
+      font-size: 2rem; width: 3rem; height: 3rem; border-radius: 50%; cursor: pointer;
+    }
+    .visor button:hover { background: rgba(255,255,255,.25); }
+    .visor .cerrar { top: 1rem; right: 1rem; }
+    .visor .ant { left: 1rem; top: 50%; transform: translateY(-50%); }
+    .visor .sig { right: 1rem; top: 50%; transform: translateY(-50%); }
+    .visor .pie { position: absolute; bottom: 1rem; color: #ddd; font-size: .95rem; width: 100%; text-align: center; }
+
+    /* Videos */
+    .videos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .video { background: var(--blanco); border: 1px solid var(--arena); border-radius: 14px; overflow: hidden; }
+    .video .marco { position: relative; aspect-ratio: 16 / 9; background: #000; }
+    .video iframe, .video video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .video .info { padding: .9rem 1.1rem; }
+    .video h3 { font-size: 1.35rem; }
+    .video p { color: var(--gris); font-size: .95rem; }
+
+    footer {
+      text-align: center; color: var(--gris); font-size: .9rem;
+      padding: 2rem 1rem; border-top: 1px solid var(--arena);
+    }
+  </style>
+</head>
+<body>
+  <header class="barra">
+    <div class="contenido">
+      <a class="marca" href="{{ '/' | relative_url }}"><span class="cruz">✠</span> Tierra Santa 2026</a>
+      <nav class="menu">
+        <a href="{{ '/' | relative_url }}" {% if page.seccion == 'inicio' %}class="activo"{% endif %}>Inicio</a>
+        <a href="{{ '/diario/' | relative_url }}" {% if page.seccion == 'diario' %}class="activo"{% endif %}>Diario</a>
+        <a href="{{ '/fotos/' | relative_url }}" {% if page.seccion == 'fotos' %}class="activo"{% endif %}>Fotos</a>
+        <a href="{{ '/videos/' | relative_url }}" {% if page.seccion == 'videos' %}class="activo"{% endif %}>Videos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer>
+    Peregrinación a Tierra Santa 2026 · {{ site.autor }}
+  </footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+---
+layout: default
+title: Videos
+seccion: videos
+---
+<div class="titulo-seccion">
+  <h1>Videos</h1>
+  <p>Momentos de la peregrinación</p>
+</div>
+
+{%- assign hay = false -%}
+<div class="videos">
+{%- for v in site.data.videos -%}
+  {%- if v.youtube -%}
+    {%- assign hay = true -%}
+    {%- assign id = v.youtube | split: "v=" | last | split: "&" | first | split: "/" | last | split: "?" | first -%}
+  <div class="video">
+    <div class="marco">
+      <iframe src="https://www.youtube-nocookie.com/embed/{{ id }}" title="{{ v.titulo | escape }}" loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="info">
+      <h3>{{ v.titulo }}</h3>
+      {% if v.descripcion %}<p>{{ v.descripcion }}</p>{% endif %}
+    </div>
+  </div>
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign archivos = site.static_files | where_exp: "f", "f.path contains '/videos/'" | sort: "path" -%}
+{%- for f in archivos -%}
+  {%- assign ext = f.extname | downcase -%}
+  {%- if ext == '.mp4' or ext == '.mov' or ext == '.webm' or ext == '.m4v' -%}
+    {%- assign hay = true -%}
+  <div class="video">
+    <div class="marco">
+      <video src="{{ f.path | relative_url }}" controls preload="metadata" playsinline></video>
+    </div>
+    <div class="info"><h3>{{ site.data.fotos[f.name] | default: f.basename | replace: "-", " " | replace: "_", " " }}</h3></div>
+  </div>
+  {%- endif -%}
+{%- endfor -%}
+</div>
+
+{% unless hay %}
+  <p class="vacio">Todavía no hay videos.</p>
+{% endunless %}

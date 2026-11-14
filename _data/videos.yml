@@ -1,0 +1,9 @@
+# VIDEOS DE YOUTUBE
+# Para agregar un video, copiá el bloque de ejemplo de abajo (las 3 líneas),
+# sacale los "#" del principio y cambiá los datos.
+# Respetá los espacios del principio de cada línea.
+# El primero de la lista aparece primero en la página.
+#
+# - titulo: "Misa en el Santo Sepulcro"
+#   youtube: "https://youtu.be/XXXXXXXXXXX"
+#   descripcion: "Jerusalén, 20 de noviembre"

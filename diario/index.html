@@ -1,0 +1,22 @@
+---
+layout: default
+title: Diario
+seccion: diario
+---
+<div class="titulo-seccion">
+  <h1>Diario</h1>
+  <p>Comentarios y reflexiones de la peregrinación</p>
+</div>
+
+{% if site.posts.size == 0 %}
+  <p class="vacio">Todavía no hay entradas en el diario.</p>
+{% endif %}
+
+{% for post in site.posts %}
+<article class="posteo">
+  <div class="fecha">{% include fecha.html fecha=post.date %}</div>
+  {% if post.lugar %}<div class="lugar">📍 {{ post.lugar }}</div>{% endif %}
+  <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+  <div class="texto">{{ post.content }}</div>
+</article>
+{% endfor %}

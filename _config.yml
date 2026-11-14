@@ -1,0 +1,23 @@
+# Configuración del sitio "Peregrinación a Tierra Santa 2026"
+title: "Peregrinación a Tierra Santa 2026"
+description: "Diario, fotos y videos de la peregrinación a Tierra Santa"
+autor: "Álvaro Sorondo"
+lang: es
+baseurl: "/web"
+timezone: America/Montevideo
+markdown: kramdown
+
+# Dirección de cada posteo: /web/diario/2026/11/14/titulo/
+permalink: /diario/:year/:month/:day/:title/
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - LEEME.md
+  - README.md
+  - plantillas

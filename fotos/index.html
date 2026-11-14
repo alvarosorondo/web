@@ -1,0 +1,76 @@
+---
+layout: default
+title: Fotos
+seccion: fotos
+---
+<div class="titulo-seccion">
+  <h1>Fotos</h1>
+  <p>Tocá una foto para verla en grande</p>
+</div>
+
+{%- assign archivos = site.static_files | where_exp: "f", "f.path contains '/fotos/'" | sort: "path" -%}
+{%- assign hay = false -%}
+<div class="galeria" id="galeria">
+{%- for f in archivos -%}
+  {%- assign ext = f.extname | downcase -%}
+  {%- if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.webp' or ext == '.gif' -%}
+    {%- assign hay = true -%}
+    {%- assign nombre = f.name -%}
+    {%- assign leyenda = site.data.fotos[nombre] -%}
+  <a href="{{ f.path | relative_url }}" data-leyenda="{{ leyenda | escape }}">
+    <img src="{{ f.path | relative_url }}" alt="{{ leyenda | default: nombre | escape }}" loading="lazy">
+  </a>
+  {%- endif -%}
+{%- endfor -%}
+</div>
+
+{% unless hay %}
+  <p class="vacio">Todavía no hay fotos.</p>
+{% endunless %}
+
+<div class="visor" id="visor">
+  <button class="cerrar" aria-label="Cerrar">×</button>
+  <button class="ant" aria-label="Anterior">‹</button>
+  <img id="visor-img" alt="">
+  <button class="sig" aria-label="Siguiente">›</button>
+  <div class="pie" id="visor-pie"></div>
+</div>
+
+<script>
+(function () {
+  var enlaces = Array.prototype.slice.call(document.querySelectorAll('#galeria a'));
+  var visor = document.getElementById('visor');
+  var img = document.getElementById('visor-img');
+  var pie = document.getElementById('visor-pie');
+  var actual = 0;
+  function mostrar(i) {
+    actual = (i + enlaces.length) % enlaces.length;
+    img.src = enlaces[actual].href;
+    pie.textContent = enlaces[actual].getAttribute('data-leyenda') || '';
+    visor.classList.add('abierto');
+  }
+  function cerrar() { visor.classList.remove('abierto'); img.src = ''; }
+  enlaces.forEach(function (a, i) {
+    a.addEventListener('click', function (e) { e.preventDefault(); mostrar(i); });
+  });
+  visor.querySelector('.cerrar').onclick = cerrar;
+  visor.querySelector('.ant').onclick = function (e) { e.stopPropagation(); mostrar(actual - 1); };
+  visor.querySelector('.sig').onclick = function (e) { e.stopPropagation(); mostrar(actual + 1); };
+  visor.addEventListener('click', function (e) { if (e.target === visor) cerrar(); });
+  document.addEventListener('keydown', function (e) {
+    if (!visor.classList.contains('abierto')) return;
+    if (e.key === 'Escape') cerrar();
+    if (e.key === 'ArrowLeft') mostrar(actual - 1);
+    if (e.key === 'ArrowRight') mostrar(actual + 1);
+  });
+  // deslizar con el dedo en el celular
+  var x0 = null;
+  visor.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; });
+  visor.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) mostrar(actual + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+})();
+</script>
