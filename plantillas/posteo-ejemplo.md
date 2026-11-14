@@ -1,5 +1,6 @@
 ---
 title: "Título del posteo"
+autor: "Mariana"
 lugar: "Jerusalén"
 ---
 Primer párrafo del texto. Este párrafo aparece como resumen en la portada.

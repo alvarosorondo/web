@@ -13,7 +13,7 @@ seccion: inicio
 <section class="portada">
   <div class="cruz-grande">✠</div>
   <h1>Peregrinación a Tierra Santa 2026</h1>
-  <p class="sub">Diario, fotos y videos del camino.</p>
+  <p class="sub">Diario, fotos y videos del camino de Álvaro y Mariana.</p>
 </section>
 
 <section class="tarjetas">
@@ -43,7 +43,7 @@ seccion: inicio
   {% for post in site.posts limit: 3 %}
   <article class="posteo">
     <div class="fecha">{% include fecha.html fecha=post.date %}</div>
-    {% if post.lugar %}<div class="lugar">📍 {{ post.lugar }}</div>{% endif %}
+    {% if post.lugar or post.autor %}<div class="lugar">{% if post.autor %}✍️ {{ post.autor }}{% endif %}{% if post.lugar and post.autor %} · {% endif %}{% if post.lugar %}📍 {{ post.lugar }}{% endif %}</div>{% endif %}
     <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
     <div class="texto">{{ post.excerpt }}</div>
     <a href="{{ post.url | relative_url }}">Leer completo →</a>

@@ -15,7 +15,7 @@ seccion: diario
 {% for post in site.posts %}
 <article class="posteo">
   <div class="fecha">{% include fecha.html fecha=post.date %}</div>
-  {% if post.lugar %}<div class="lugar">📍 {{ post.lugar }}</div>{% endif %}
+  {% if post.lugar or post.autor %}<div class="lugar">{% if post.autor %}✍️ {{ post.autor }}{% endif %}{% if post.lugar and post.autor %} · {% endif %}{% if post.lugar %}📍 {{ post.lugar }}{% endif %}</div>{% endif %}
   <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
   <div class="texto">{{ post.content }}</div>
 </article>
